@@ -1,150 +1,332 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SK Cricket Scorer</title>
+<title>HR Cric Master</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f1f3f6;
 }
 
-.header {
-  background: #075e54;
-  color: white;
-  text-align: center;
-  padding: 18px;
+header{
+  background:#075e54;
+  color:white;
+  text-align:center;
+  padding:20px;
 }
 
-.score {
-  background: white;
-  margin: 15px;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
+.container{
+  padding:15px;
 }
 
-#runs {
-  font-size: 48px;
-  font-weight: bold;
+.card{
+  background:white;
+  padding:18px;
+  margin-bottom:15px;
+  border-radius:12px;
+  box-shadow:0 2px 6px #ccc;
 }
 
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 15px;
+input,select{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  box-sizing:border-box;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
 }
 
-button {
-  padding: 18px 5px;
-  font-size: 20px;
-  border: none;
-  border-radius: 10px;
-  background: #075e54;
-  color: white;
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border:0;
+  border-radius:8px;
+  background:#075e54;
+  color:white;
+  font-size:17px;
 }
 
-button:active {
-  transform: scale(0.95);
+.score{
+  text-align:center;
+  font-size:42px;
+  font-weight:bold;
 }
 
-.info {
-  background: white;
-  margin: 15px;
-  padding: 15px;
-  border-radius: 12px;
+.small{
+  text-align:center;
+  font-size:18px;
 }
 
-.reset {
-  background: #c62828;
-  width: calc(100% - 30px);
-  margin: 15px;
+.hidden{
+  display:none;
+}
+
+.runbuttons{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.runbuttons button{
+  margin:0;
+  font-size:20px;
+}
+
+.reset{
+  background:#c62828;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>🏏 SK Cricket Scorer</h1>
-  <p>Live Cricket Scoring</p>
+<header>
+<h1>🏏 HR Cric Master</h1>
+<p>Cricket Scoring</p>
+</header>
+
+<div class="container">
+
+<div id="setup">
+
+<div class="card">
+<h2>Match Setup</h2>
+
+<input id="matchName" placeholder="Match Name">
+
+<input id="teamA" placeholder="Team A Name">
+
+<input id="teamB" placeholder="Team B Name">
+
+<input id="oversInput" type="number" placeholder="Total Overs">
+
+<select id="toss">
+<option value="">Who won the toss?</option>
+<option value="A">Team A</option>
+<option value="B">Team B</option>
+</select>
+
+<select id="decision">
+<option value="">Choose decision</option>
+<option value="bat">Bat First</option>
+<option value="bowl">Bowl First</option>
+</select>
+
+<button onclick="startMatch()">🏏 Start Match</button>
+
 </div>
 
-<div class="score">
-  <div id="runs">0/0</div>
-  <h3>Overs: <span id="overs">0.0</span></h3>
+<div class="card">
+<h3>Team A Players</h3>
+
+<div id="playersA"></div>
+
 </div>
 
-<div class="buttons">
-  <button onclick="addRun(0)">0</button>
-  <button onclick="addRun(1)">1</button>
-  <button onclick="addRun(2)">2</button>
-  <button onclick="addRun(3)">3</button>
-  <button onclick="addRun(4)">4</button>
-  <button onclick="addRun(6)">6</button>
-  <button onclick="wicket()">Wicket</button>
-  <button onclick="extra()">Wide</button>
-  <button onclick="noBall()">No Ball</button>
+<div class="card">
+<h3>Team B Players</h3>
+
+<div id="playersB"></div>
+
 </div>
 
-<div class="info">
-  <h3>Match Information</h3>
-  <p>Runs: <b id="totalRuns">0</b></p>
-  <p>Wickets: <b id="totalWickets">0</b></p>
-  <p>Balls: <b id="balls">0</b></p>
 </div>
 
-<button class="reset" onclick="resetScore()">🔄 Reset Match</button>
+
+<div id="scorer" class="hidden">
+
+<div class="card">
+<h2 id="matchTitle"></h2>
+<p id="teams"></p>
+</div>
+
+<div class="card">
+<div class="score" id="score">0/0</div>
+<div class="small">
+Overs: <span id="overs">0.0</span>
+</div>
+</div>
+
+<div class="card">
+
+<h3>Batting</h3>
+
+<p>🏏 Striker: <b id="striker">-</b></p>
+<p>🏏 Non-Striker: <b id="nonStriker">-</b></p>
+<p>🎯 Bowler: <b id="bowler">-</b></p>
+
+</div>
+
+<div class="card">
+
+<h3>Runs</h3>
+
+<div class="runbuttons">
+
+<button onclick="addRun(0)">0</button>
+<button onclick="addRun(1)">1</button>
+<button onclick="addRun(2)">2</button>
+<button onclick="addRun(3)">3</button>
+<button onclick="addRun(4)">4</button>
+<button onclick="addRun(6)">6</button>
+
+<button onclick="wide()">Wide</button>
+<button onclick="noball()">No Ball</button>
+<button onclick="wicket()">Wicket</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Scorecard</h3>
+
+<p>Total Runs: <b id="totalRuns">0</b></p>
+<p>Wickets: <b id="totalWickets">0</b></p>
+<p>Balls: <b id="totalBalls">0</b></p>
+
+<button class="reset" onclick="resetMatch()">🔄 Reset</button>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script>
-let totalRuns = 0;
-let wickets = 0;
-let balls = 0;
 
-function update() {
-  document.getElementById("runs").innerText =
-    totalRuns + "/" + wickets;
+let runs=0;
+let wickets=0;
+let balls=0;
+let maxOvers=0;
 
-  document.getElementById("totalRuns").innerText = totalRuns;
-  document.getElementById("totalWickets").innerText = wickets;
-  document.getElementById("balls").innerText = balls;
+function createPlayers(){
 
-  let overs = Math.floor(balls / 6) + "." + (balls % 6);
-  document.getElementById("overs").innerText = overs;
+let a="";
+let b="";
+
+for(let i=1;i<=11;i++){
+
+a += `<input id="a${i}" placeholder="Team A Player ${i}">`;
+
+b += `<input id="b${i}" placeholder="Team B Player ${i}">`;
+
 }
 
-function addRun(run) {
-  totalRuns += run;
-  balls++;
-  update();
+document.getElementById("playersA").innerHTML=a;
+document.getElementById("playersB").innerHTML=b;
+
 }
 
-function wicket() {
-  wickets++;
-  balls++;
-  update();
+createPlayers();
+
+
+function startMatch(){
+
+let match=document.getElementById("matchName").value;
+let teamA=document.getElementById("teamA").value;
+let teamB=document.getElementById("teamB").value;
+maxOvers=document.getElementById("oversInput").value;
+
+if(!teamA || !teamB || !maxOvers){
+
+alert("Team names aur overs bharo");
+
+return;
+
 }
 
-function extra() {
-  totalRuns++;
-  update();
+document.getElementById("matchTitle").innerText=
+match || "Cricket Match";
+
+document.getElementById("teams").innerText=
+teamA+" vs "+teamB;
+
+document.getElementById("setup").classList.add("hidden");
+
+document.getElementById("scorer").classList.remove("hidden");
+
+update();
+
 }
 
-function noBall() {
-  totalRuns++;
-  update();
+
+function addRun(r){
+
+runs += r;
+balls++;
+
+update();
+
 }
 
-function resetScore() {
-  totalRuns = 0;
-  wickets = 0;
-  balls = 0;
-  update();
+
+function wide(){
+
+runs++;
+update();
+
 }
+
+
+function noball(){
+
+runs++;
+update();
+
+}
+
+
+function wicket(){
+
+if(wickets < 10){
+
+wickets++;
+balls++;
+
+}
+
+update();
+
+}
+
+
+function update(){
+
+document.getElementById("score").innerText=
+runs+"/"+wickets;
+
+document.getElementById("totalRuns").innerText=runs;
+
+document.getElementById("totalWickets").innerText=wickets;
+
+document.getElementById("totalBalls").innerText=balls;
+
+let over=Math.floor(balls/6)+"."+(balls%6);
+
+document.getElementById("overs").innerText=over;
+
+}
+
+
+function resetMatch(){
+
+runs=0;
+wickets=0;
+balls=0;
+
+update();
+
+}
+
 </script>
 
 </body>
