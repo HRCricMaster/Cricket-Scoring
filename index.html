@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SK Cricket Scorer</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+}
+
+.header {
+  background: #075e54;
+  color: white;
+  text-align: center;
+  padding: 18px;
+}
+
+.score {
+  background: white;
+  margin: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+#runs {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 15px;
+}
+
+button {
+  padding: 18px 5px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #075e54;
+  color: white;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.info {
+  background: white;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.reset {
+  background: #c62828;
+  width: calc(100% - 30px);
+  margin: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>🏏 SK Cricket Scorer</h1>
+  <p>Live Cricket Scoring</p>
+</div>
+
+<div class="score">
+  <div id="runs">0/0</div>
+  <h3>Overs: <span id="overs">0.0</span></h3>
+</div>
+
+<div class="buttons">
+  <button onclick="addRun(0)">0</button>
+  <button onclick="addRun(1)">1</button>
+  <button onclick="addRun(2)">2</button>
+  <button onclick="addRun(3)">3</button>
+  <button onclick="addRun(4)">4</button>
+  <button onclick="addRun(6)">6</button>
+  <button onclick="wicket()">Wicket</button>
+  <button onclick="extra()">Wide</button>
+  <button onclick="noBall()">No Ball</button>
+</div>
+
+<div class="info">
+  <h3>Match Information</h3>
+  <p>Runs: <b id="totalRuns">0</b></p>
+  <p>Wickets: <b id="totalWickets">0</b></p>
+  <p>Balls: <b id="balls">0</b></p>
+</div>
+
+<button class="reset" onclick="resetScore()">🔄 Reset Match</button>
+
+<script>
+let totalRuns = 0;
+let wickets = 0;
+let balls = 0;
+
+function update() {
+  document.getElementById("runs").innerText =
+    totalRuns + "/" + wickets;
+
+  document.getElementById("totalRuns").innerText = totalRuns;
+  document.getElementById("totalWickets").innerText = wickets;
+  document.getElementById("balls").innerText = balls;
+
+  let overs = Math.floor(balls / 6) + "." + (balls % 6);
+  document.getElementById("overs").innerText = overs;
+}
+
+function addRun(run) {
+  totalRuns += run;
+  balls++;
+  update();
+}
+
+function wicket() {
+  wickets++;
+  balls++;
+  update();
+}
+
+function extra() {
+  totalRuns++;
+  update();
+}
+
+function noBall() {
+  totalRuns++;
+  update();
+}
+
+function resetScore() {
+  totalRuns = 0;
+  wickets = 0;
+  balls = 0;
+  update();
+}
+</script>
+
+</body>
+</html>
