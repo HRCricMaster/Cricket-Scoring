@@ -3,329 +3,384 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR Cric Master</title>
+<title>Cricket Scorer</title>
 
 <style>
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f1f3f6;
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f2f4f7;
+    color:#111;
 }
-
-header{
-  background:#075e54;
-  color:white;
-  text-align:center;
-  padding:20px;
+.header{
+    background:#087f23;
+    color:white;
+    padding:18px;
+    text-align:center;
 }
-
+.header h1{margin:0;font-size:28px;}
 .container{
-  padding:15px;
+    max-width:600px;
+    margin:auto;
+    padding:15px;
 }
-
-.card{
-  background:white;
-  padding:18px;
-  margin-bottom:15px;
-  border-radius:12px;
-  box-shadow:0 2px 6px #ccc;
+.scorebox{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 2px 8px #bbb;
 }
-
-input,select{
-  width:100%;
-  padding:13px;
-  margin:7px 0;
-  box-sizing:border-box;
-  border:1px solid #ccc;
-  border-radius:8px;
-  font-size:16px;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  border:0;
-  border-radius:8px;
-  background:#075e54;
-  color:white;
-  font-size:17px;
-}
-
 .score{
-  text-align:center;
-  font-size:42px;
-  font-weight:bold;
+    font-size:48px;
+    font-weight:bold;
 }
-
-.small{
-  text-align:center;
-  font-size:18px;
+.overs{
+    font-size:20px;
+    margin-top:5px;
 }
-
-.hidden{
-  display:none;
+.section{
+    background:white;
+    padding:15px;
+    margin-top:15px;
+    border-radius:15px;
+    box-shadow:0 2px 6px #ccc;
 }
-
-.runbuttons{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
+.section h2{
+    margin-top:0;
+    font-size:20px;
 }
-
-.runbuttons button{
-  margin:0;
-  font-size:20px;
+button{
+    border:0;
+    border-radius:10px;
+    padding:13px;
+    margin:5px;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
 }
-
+.run{
+    background:#e8f5e9;
+    min-width:60px;
+}
+.special{
+    background:#fff3cd;
+}
+.wicket{
+    background:#f44336;
+    color:white;
+}
+.undo{
+    background:#555;
+    color:white;
+}
 .reset{
-  background:#c62828;
+    background:#111;
+    color:white;
+    width:100%;
 }
+.history{
+    max-height:300px;
+    overflow:auto;
+}
+.ball{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+    font-size:16px;
+}
+.green{color:green;font-weight:bold;}
+.red{color:red;font-weight:bold;}
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>🏏 HR Cric Master</h1>
-<p>Cricket Scoring</p>
-</header>
+<div class="header">
+    <h1>🏏 Cricket Scorer</h1>
+</div>
 
 <div class="container">
 
-<div id="setup">
+<div class="scorebox">
+    <div id="score" class="score">0/0</div>
+    <div id="overs" class="overs">Overs: 0.0</div>
+</div>
 
-<div class="card">
-<h2>Match Setup</h2>
+<div class="section">
+<h2>Runs</h2>
 
-<input id="matchName" placeholder="Match Name">
-
-<input id="teamA" placeholder="Team A Name">
-
-<input id="teamB" placeholder="Team B Name">
-
-<input id="oversInput" type="number" placeholder="Total Overs">
-
-<select id="toss">
-<option value="">Who won the toss?</option>
-<option value="A">Team A</option>
-<option value="B">Team B</option>
-</select>
-
-<select id="decision">
-<option value="">Choose decision</option>
-<option value="bat">Bat First</option>
-<option value="bowl">Bowl First</option>
-</select>
-
-<button onclick="startMatch()">🏏 Start Match</button>
+<button class="run" onclick="addRuns(0)">0</button>
+<button class="run" onclick="addRuns(1)">1</button>
+<button class="run" onclick="addRuns(2)">2</button>
+<button class="run" onclick="addRuns(3)">3</button>
+<button class="run" onclick="addRuns(4)">4</button>
+<button class="run" onclick="addRuns(5)">5</button>
+<button class="run" onclick="addRuns(6)">6</button>
 
 </div>
 
-<div class="card">
-<h3>Team A Players</h3>
+<div class="section">
+<h2>Extras</h2>
 
-<div id="playersA"></div>
+<button class="special" onclick="extra('wide',1)">Wide +1</button>
 
-</div>
+<button class="special" onclick="extra('wide',2)">Wide +2</button>
 
-<div class="card">
-<h3>Team B Players</h3>
+<button class="special" onclick="extra('wide',3)">Wide +3</button>
 
-<div id="playersB"></div>
+<button class="special" onclick="extra('wide',4)">Wide +4</button>
 
-</div>
+<button class="special" onclick="extra('wide',5)">Wide +5</button>
 
-</div>
+<br>
 
+<button class="special" onclick="extra('bye',1)">Bye 1</button>
+<button class="special" onclick="extra('bye',2)">Bye 2</button>
+<button class="special" onclick="extra('bye',3)">Bye 3</button>
+<button class="special" onclick="extra('bye',4)">Bye 4</button>
 
-<div id="scorer" class="hidden">
+<br>
 
-<div class="card">
-<h2 id="matchTitle"></h2>
-<p id="teams"></p>
-</div>
-
-<div class="card">
-<div class="score" id="score">0/0</div>
-<div class="small">
-Overs: <span id="overs">0.0</span>
-</div>
-</div>
-
-<div class="card">
-
-<h3>Batting</h3>
-
-<p>🏏 Striker: <b id="striker">-</b></p>
-<p>🏏 Non-Striker: <b id="nonStriker">-</b></p>
-<p>🎯 Bowler: <b id="bowler">-</b></p>
+<button class="special" onclick="extra('legbye',1)">LB 1</button>
+<button class="special" onclick="extra('legbye',2)">LB 2</button>
+<button class="special" onclick="extra('legbye',3)">LB 3</button>
+<button class="special" onclick="extra('legbye',4)">LB 4</button>
 
 </div>
 
-<div class="card">
+<div class="section">
+<h2>No Ball</h2>
 
-<h3>Runs</h3>
-
-<div class="runbuttons">
-
-<button onclick="addRun(0)">0</button>
-<button onclick="addRun(1)">1</button>
-<button onclick="addRun(2)">2</button>
-<button onclick="addRun(3)">3</button>
-<button onclick="addRun(4)">4</button>
-<button onclick="addRun(6)">6</button>
-
-<button onclick="wide()">Wide</button>
-<button onclick="noball()">No Ball</button>
-<button onclick="wicket()">Wicket</button>
+<button class="special" onclick="noBall(0)">NB +0</button>
+<button class="special" onclick="noBall(1)">NB +1</button>
+<button class="special" onclick="noBall(2)">NB +2</button>
+<button class="special" onclick="noBall(3)">NB +3</button>
+<button class="special" onclick="noBall(4)">NB +4</button>
+<button class="special" onclick="noBall(5)">NB +5</button>
+<button class="special" onclick="noBall(6)">NB +6</button>
 
 </div>
 
-</div>
+<div class="section">
+<h2>Wicket</h2>
 
-<div class="card">
+<button class="wicket" onclick="wicket()">WICKET</button>
 
-<h3>Scorecard</h3>
+<br>
 
-<p>Total Runs: <b id="totalRuns">0</b></p>
-<p>Wickets: <b id="totalWickets">0</b></p>
-<p>Balls: <b id="totalBalls">0</b></p>
-
-<button class="reset" onclick="resetMatch()">🔄 Reset</button>
-
-</div>
+<button class="wicket" onclick="runOut(0)">Run Out +0</button>
+<button class="wicket" onclick="runOut(1)">Run Out +1</button>
+<button class="wicket" onclick="runOut(2)">Run Out +2</button>
+<button class="wicket" onclick="runOut(3)">Run Out +3</button>
 
 </div>
 
+<div class="section">
+<h2>Controls</h2>
+
+<button class="undo" onclick="undo()">↩ Undo</button>
+
+<button class="reset" onclick="resetScore()">RESET MATCH</button>
+
 </div>
 
+<div class="section">
+<h2>Ball by Ball</h2>
+<div id="history" class="history"></div>
+</div>
+
+</div>
 
 <script>
 
-let runs=0;
-let wickets=0;
-let balls=0;
-let maxOvers=0;
+let runs = 0;
+let wickets = 0;
+let balls = 0;
 
-function createPlayers(){
+let history = [];
+let stateHistory = [];
 
-let a="";
-let b="";
+function saveState(){
 
-for(let i=1;i<=11;i++){
-
-a += `<input id="a${i}" placeholder="Team A Player ${i}">`;
-
-b += `<input id="b${i}" placeholder="Team B Player ${i}">`;
-
-}
-
-document.getElementById("playersA").innerHTML=a;
-document.getElementById("playersB").innerHTML=b;
+    stateHistory.push({
+        runs:runs,
+        wickets:wickets,
+        balls:balls,
+        history:[...history]
+    });
 
 }
-
-createPlayers();
-
-
-function startMatch(){
-
-let match=document.getElementById("matchName").value;
-let teamA=document.getElementById("teamA").value;
-let teamB=document.getElementById("teamB").value;
-maxOvers=document.getElementById("oversInput").value;
-
-if(!teamA || !teamB || !maxOvers){
-
-alert("Team names aur overs bharo");
-
-return;
-
-}
-
-document.getElementById("matchTitle").innerText=
-match || "Cricket Match";
-
-document.getElementById("teams").innerText=
-teamA+" vs "+teamB;
-
-document.getElementById("setup").classList.add("hidden");
-
-document.getElementById("scorer").classList.remove("hidden");
-
-update();
-
-}
-
-
-function addRun(r){
-
-runs += r;
-balls++;
-
-update();
-
-}
-
-
-function wide(){
-
-runs++;
-update();
-
-}
-
-
-function noball(){
-
-runs++;
-update();
-
-}
-
-
-function wicket(){
-
-if(wickets < 10){
-
-wickets++;
-balls++;
-
-}
-
-update();
-
-}
-
 
 function update(){
 
-document.getElementById("score").innerText=
-runs+"/"+wickets;
+    document.getElementById("score").innerText =
+        runs + "/" + wickets;
 
-document.getElementById("totalRuns").innerText=runs;
+    let overs =
+        Math.floor(balls/6) + "." + (balls%6);
 
-document.getElementById("totalWickets").innerText=wickets;
+    document.getElementById("overs").innerText =
+        "Overs: " + overs;
 
-document.getElementById("totalBalls").innerText=balls;
+    let h = document.getElementById("history");
 
-let over=Math.floor(balls/6)+"."+(balls%6);
+    h.innerHTML = "";
 
-document.getElementById("overs").innerText=over;
+    history.slice().reverse().forEach(function(item){
+
+        let div = document.createElement("div");
+
+        div.className = "ball";
+
+        div.innerHTML = item;
+
+        h.appendChild(div);
+
+    });
 
 }
 
+function addRuns(r){
 
-function resetMatch(){
+    saveState();
 
-runs=0;
-wickets=0;
-balls=0;
+    runs += r;
+    balls++;
+
+    history.push(
+        "<span class='green'>" + r + " run" +
+        (r==1 ? "" : "s") + "</span>"
+    );
+
+    update();
+
+}
+
+function extra(type,r){
+
+    saveState();
+
+    runs += r;
+
+    if(type === "wide"){
+
+        history.push(
+            "<span class='green'>Wide +" + r + "</span>"
+        );
+
+    }else{
+
+        balls++;
+
+        let name = type === "bye" ? "Bye" : "Leg Bye";
+
+        history.push(
+            "<span class='green'>" +
+            name + " " + r +
+            "</span>"
+        );
+
+    }
+
+    update();
+
+}
+
+function noBall(r){
+
+    saveState();
+
+    runs += 1 + r;
+
+    history.push(
+        "<span class='green'>No Ball + " +
+        r + " bat run = " +
+        (1+r) + " runs</span>"
+    );
+
+    /*
+    No-ball ball count nahi badhta.
+    */
+
+    update();
+
+}
+
+function wicket(){
+
+    saveState();
+
+    wickets++;
+
+    balls++;
+
+    history.push(
+        "<span class='red'>WICKET</span>"
+    );
+
+    update();
+
+}
+
+function runOut(r){
+
+    saveState();
+
+    runs += r;
+
+    wickets++;
+
+    balls++;
+
+    history.push(
+        "<span class='red'>RUN OUT + " +
+        r + " run" +
+        (r==1 ? "" : "s") +
+        "</span>"
+    );
+
+    update();
+
+}
+
+function undo(){
+
+    if(stateHistory.length === 0){
+
+        alert("Nothing to undo");
+
+        return;
+
+    }
+
+    let previous =
+        stateHistory.pop();
+
+    runs = previous.runs;
+    wickets = previous.wickets;
+    balls = previous.balls;
+    history = previous.history;
+
+    update();
+
+}
+
+function resetScore(){
+
+    if(!confirm("Reset complete match?")) return;
+
+    runs = 0;
+    wickets = 0;
+    balls = 0;
+
+    history = [];
+    stateHistory = [];
+
+    update();
+
+}
 
 update();
-
-}
 
 </script>
 
